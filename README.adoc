@@ -1,0 +1,5 @@
+= jot
+
+document management system based on asciidoc and git. issues, notes, minutes, invoices
+
+
