@@ -1,4 +1,6 @@
 = jot
+:description: this is whatever
+:custom-attr: somevalue
 
 document management system based on asciidoc and git. issues, notes, minutes, invoices
 
