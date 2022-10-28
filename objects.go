@@ -22,7 +22,7 @@ type FileDocument struct {
 	doc  *types.Document
 }
 
-func NewFileDocument(path string, sm StateMachine) (*FileDocument, error) {
+func NewFileDocument(path string) (*FileDocument, error) {
 
 	file, err := os.Open(path)
 	if err != nil {
@@ -31,23 +31,10 @@ func NewFileDocument(path string, sm StateMachine) (*FileDocument, error) {
 	defer file.Close()
 
 	config := &configuration.Configuration{}
-	config.Attributes.Set("kostis", "whatever")
-
-	// p, err := parser.Preprocess(file, config)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	fmt.Println("Attributes")
-	fmt.Println(config.Attributes)
-
 	doc, err := parser.ParseDocument(file, config)
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println("Attributes again")
-	fmt.Println(config.Attributes, doc.Header().Attributes)
 
 	for _, v := range doc.Elements {
 		switch e := v.(type) {

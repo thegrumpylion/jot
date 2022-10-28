@@ -1,3 +1,13 @@
+---
+ena: dio
+tria:
+- ena
+- dio
+tessera:
+  pente: wnt
+  ekso: sdfg
+---
+
 = jot
 :description: this is whatever
 :custom-attr: somevalue
