@@ -1,0 +1,20 @@
+= jot
+
+note taking system
+
+== principles
+
+* git based
+* asciidoc
+* link/graphs
+* external editor
+* templates
+* lsp support
+
+* image OCR
+* audio transcription
+* natural language processing
+
+* indexing/search
+* fuzzy
+
