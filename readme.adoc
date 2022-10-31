@@ -10,6 +10,8 @@ note taking system
 * external editor
 * templates
 * lsp support
+* cli workflow
+* webapp
 
 * image OCR
 * audio transcription
@@ -18,3 +20,4 @@ note taking system
 * indexing/search
 * fuzzy
 
+* merge/split/refacror notes
