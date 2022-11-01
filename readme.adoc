@@ -21,3 +21,10 @@ note taking system
 * fuzzy
 
 * merge/split/refacror notes
+
+== mvp
+
+* add new note
+* search(indexing)
+* graph(links,xref,backlinks)
+* render/webapp
