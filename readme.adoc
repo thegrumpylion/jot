@@ -4,11 +4,11 @@ note taking system
 
 == principles
 
-* git based
+* git based(also lfs)
 * asciidoc
-* link/graphs
+* link/graphs/backlinks
 * external editor
-* templates
+* templates(textmate/custom)
 * lsp support
 * cli workflow
 * webapp
