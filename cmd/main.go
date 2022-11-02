@@ -9,10 +9,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-	Use:  "jot",
-	RunE: rootCmdRunE,
-	Args: cobra.ExactArgs(1),
+type rootCommand struct {
+	*cobra.Command
+}
+
+var rootCmd = &rootCommand{
+	Command: &cobra.Command{
+		Use:  "jot",
+		RunE: rootCmdRunE,
+	},
 }
 
 func rootCmdRunE(cmd *cobra.Command, args []string) error {
