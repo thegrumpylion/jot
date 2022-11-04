@@ -12,22 +12,40 @@ note taking system
 * lsp support
 * cli workflow
 * webapp
+* lua scripting
+* plugins
+
+== input and processing
 
 * image OCR
 * audio transcription
 * natural language processing
 * call recording
+* browser pluggin
 
-* indexing/search
+== search
+
+* indexing/search https://github.com/blugelabs/bluge[bluge]
 * fuzzy
 
-* merge/split/refacror notes
+== objects
 
-== time tracking
+* note
+* event
+* todo
+* contact
+* place
+* repository
+* mail
 
 == webapp
 
 * stellar keyboard controll and navigation
+
+== format support
+
+* ical
+* vcard
 
 == integrtions
 
@@ -37,7 +55,22 @@ note taking system
 
 === jira
 
-TODO: create 
+* issues
+
+=== github
+
+* prs
+* issues
+* wiki?
+
+=== google
+
+* calendar
+* gmail
+
+== time tracking
+
+* adaptive auto estimate
 
 == mvp
 
