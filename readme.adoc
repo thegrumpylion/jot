@@ -16,11 +16,28 @@ note taking system
 * image OCR
 * audio transcription
 * natural language processing
+* call recording
 
 * indexing/search
 * fuzzy
 
 * merge/split/refacror notes
+
+== time tracking
+
+== webapp
+
+* stellar keyboard controll and navigation
+
+== integrtions
+
+* import
+* export
+* sync?
+
+=== jira
+
+TODO: create 
 
 == mvp
 
