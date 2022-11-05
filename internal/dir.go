@@ -1,17 +1,16 @@
-package jot_test
+package jot
 
 import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"testing"
 )
 
-func TestPathRegression(t *testing.T) {
+func GetDir() (string, error) {
 	// get current path
 	path, err := os.Getwd()
 	if err != nil {
-		t.Fatal(err)
+		return "", err
 	}
 
 	// find .jot directory from current path and back until root
@@ -20,9 +19,9 @@ func TestPathRegression(t *testing.T) {
 			break
 		}
 		if path == "/" {
-			t.Fatal("No .jot directory found")
+			return "", fmt.Errorf("no .jot directory found in the current path or any parent")
 		}
 		path = filepath.Dir(path)
 	}
-	fmt.Println(path)
+	return path, nil
 }

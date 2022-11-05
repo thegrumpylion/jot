@@ -7,6 +7,7 @@ import (
 
 	"github.com/blugelabs/bluge"
 	"github.com/spf13/cobra"
+	"github.com/thegrumpylion/jot/internal"
 )
 
 type indexCommand struct {
@@ -26,8 +27,14 @@ func init() {
 
 func indexCmdRunE(cmd *cobra.Command, args []string) error {
 
+	// get .jot dir path
+	dir, err := jot.GetDir()
+	if err != nil {
+		return err
+	}
+
 	// bluge default config
-	config := bluge.DefaultConfig(".jot/index")
+	config := bluge.DefaultConfig(filepath.Join(dir, "index"))
 
 	// open writer
 	writer, err := bluge.OpenWriter(config)
