@@ -25,9 +25,8 @@ func (s *server) Serve(ctx context.Context, to time.Duration) error {
 func (s *server) Initialize(ctx context.Context, params *protocol.InitializeParams) (result *protocol.InitializeResult, err error) {
 	res := &protocol.InitializeResult{
 		Capabilities: protocol.ServerCapabilities{
-			CompletionProvider: &protocol.CompletionOptions{
-				ResolveProvider: true,
-			},
+			CompletionProvider: &protocol.CompletionOptions{},
+			CodeLensProvider:   &protocol.CodeLensOptions{},
 		},
 		ServerInfo: &protocol.ServerInfo{
 			Name:    "jotls",
