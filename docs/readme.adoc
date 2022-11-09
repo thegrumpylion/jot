@@ -4,16 +4,35 @@ note taking system
 
 == principles
 
-* git based(also lfs)
+* protobuf
 * asciidoc
+* git based(also lfs)
 * link/graphs/backlinks
-* external editor
+* indexing/searching
+* events
+
 * templates(textmate/custom)
 * lsp support
-* cli workflow
-* webapp
 * lua scripting
-* plugins
+* modules/plugins
+* renderes
+
+== object lifecycle
+
+events fire on change
+
+=== added
+
+* parse and validate
+* git add and commit
+
+=== updated
+
+* git commit
+
+=== deleted
+
+* git commit
 
 == input and processing
 
@@ -37,10 +56,6 @@ note taking system
 * place
 * repository
 * mail
-
-== webapp
-
-* stellar keyboard controll and navigation
 
 == format support
 
@@ -77,4 +92,4 @@ note taking system
 * add new note
 * search(indexing)
 * graph(links,xref,backlinks)
-* render/webapp
+* lsp
