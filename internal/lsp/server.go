@@ -2,8 +2,10 @@ package lsp
 
 import (
 	"context"
+	"fmt"
 	"time"
 
+	"github.com/thegrumpylion/jot/internal/adoc"
 	"go.lsp.dev/jsonrpc2"
 	"go.lsp.dev/protocol"
 )
@@ -12,7 +14,7 @@ type server struct {
 	ver string
 }
 
-func NewServer(ver string) protocol.Server {
+func NewServer(ver string) *server {
 	return &server{ver: ver}
 }
 
@@ -23,10 +25,13 @@ func (s *server) Serve(ctx context.Context, to time.Duration) error {
 }
 
 func (s *server) Initialize(ctx context.Context, params *protocol.InitializeParams) (result *protocol.InitializeResult, err error) {
+	fmt.Println("initialize", *params)
 	res := &protocol.InitializeResult{
 		Capabilities: protocol.ServerCapabilities{
-			CompletionProvider: &protocol.CompletionOptions{},
-			CodeLensProvider:   &protocol.CodeLensOptions{},
+			CompletionProvider: &protocol.CompletionOptions{
+				ResolveProvider: true,
+			},
+			CodeLensProvider: &protocol.CodeLensOptions{},
 		},
 		ServerInfo: &protocol.ServerInfo{
 			Name:    "jotls",
@@ -37,15 +42,18 @@ func (s *server) Initialize(ctx context.Context, params *protocol.InitializePara
 }
 
 func (s *server) Initialized(ctx context.Context, params *protocol.InitializedParams) (err error) {
-	panic("not implemented") // TODO: Implement
+	fmt.Println("initialized", *params)
+	return nil
 }
 
 func (s *server) Shutdown(ctx context.Context) (err error) {
-	panic("not implemented") // TODO: Implement
+	fmt.Println("shutdown, bye!")
+	return nil
 }
 
 func (s *server) Exit(ctx context.Context) (err error) {
-	panic("not implemented") // TODO: Implement
+	fmt.Println("exit")
+	return nil
 }
 
 func (s *server) WorkDoneProgressCancel(ctx context.Context, params *protocol.WorkDoneProgressCancelParams) (err error) {
@@ -77,7 +85,36 @@ func (s *server) ColorPresentation(ctx context.Context, params *protocol.ColorPr
 }
 
 func (s *server) Completion(ctx context.Context, params *protocol.CompletionParams) (result *protocol.CompletionList, err error) {
-	panic("not implemented") // TODO: Implement
+	fmt.Println("completion", *params)
+	fn := params.TextDocument.URI.Filename()
+
+	fmt.Println("fn", fn)
+	doc, err := adoc.ParseFile(fn)
+	if err != nil {
+		fmt.Println("error parsing file", err)
+	}
+	fmt.Println("doc", doc)
+
+	return &protocol.CompletionList{
+		IsIncomplete: false,
+		Items: []protocol.CompletionItem{
+			{
+				Label: "foo",
+				Kind:  protocol.CompletionItemKindText,
+				Data:  1,
+			},
+			{
+				Label: "bar",
+				Kind:  protocol.CompletionItemKindText,
+				Data:  2,
+			},
+			{
+				Label: "bar",
+				Kind:  protocol.CompletionItemKindKeyword,
+				Data:  3,
+			},
+		},
+	}, nil
 }
 
 func (s *server) CompletionResolve(ctx context.Context, params *protocol.CompletionItem) (result *protocol.CompletionItem, err error) {
@@ -113,11 +150,13 @@ func (s *server) DidClose(ctx context.Context, params *protocol.DidCloseTextDocu
 }
 
 func (s *server) DidOpen(ctx context.Context, params *protocol.DidOpenTextDocumentParams) (err error) {
-	panic("not implemented") // TODO: Implement
+	fmt.Println("didOpen", *params)
+	return nil
 }
 
 func (s *server) DidSave(ctx context.Context, params *protocol.DidSaveTextDocumentParams) (err error) {
-	panic("not implemented") // TODO: Implement
+	fmt.Println("didSave", *params)
+	return nil
 }
 
 func (s *server) DocumentColor(ctx context.Context, params *protocol.DocumentColorParams) (result []protocol.ColorInformation, err error) {
