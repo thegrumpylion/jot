@@ -10,14 +10,21 @@ import (
 	"go.lsp.dev/protocol"
 )
 
+// server is a language server.
 type server struct {
-	ver string
+	ver        string
+	workspaces map[string]*Workspace
 }
 
+// NewServer creates a new server.
 func NewServer(ver string) *server {
-	return &server{ver: ver}
+	return &server{
+		ver:        ver,
+		workspaces: make(map[string]*Workspace),
+	}
 }
 
+// Serve is the entry point for the language server.
 func (s *server) Serve(ctx context.Context, to time.Duration) error {
 	sh := protocol.ServerHandler(s, nil)
 	hs := jsonrpc2.HandlerServer(sh)
@@ -25,9 +32,13 @@ func (s *server) Serve(ctx context.Context, to time.Duration) error {
 }
 
 func (s *server) Initialize(ctx context.Context, params *protocol.InitializeParams) (result *protocol.InitializeResult, err error) {
-	fmt.Println("initialize", *params)
+	fmt.Println("initialize", params.RootPath)
+
+	s.workspaces[params.RootPath] = NewWorkspace(params.RootPath)
+
 	res := &protocol.InitializeResult{
 		Capabilities: protocol.ServerCapabilities{
+			TextDocumentSync: protocol.TextDocumentSyncKindFull,
 			CompletionProvider: &protocol.CompletionOptions{
 				ResolveProvider: true,
 			},
@@ -130,7 +141,19 @@ func (s *server) Definition(ctx context.Context, params *protocol.DefinitionPara
 }
 
 func (s *server) DidChange(ctx context.Context, params *protocol.DidChangeTextDocumentParams) (err error) {
-	panic("not implemented") // TODO: Implement
+	fmt.Println("didChange")
+
+	// with full sync we expect only one change
+	if len(params.ContentChanges) != 1 {
+		return fmt.Errorf("expected one change, got %d", len(params.ContentChanges))
+	}
+
+	// get document text
+	text := params.ContentChanges[0].Text
+
+	fmt.Println("text", text)
+
+	return nil
 }
 
 func (s *server) DidChangeConfiguration(ctx context.Context, params *protocol.DidChangeConfigurationParams) (err error) {
