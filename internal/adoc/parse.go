@@ -43,17 +43,15 @@ func Fragments(r io.Reader, config *configuration.Configuration) (interface{}, e
 	done := make(chan interface{})
 	defer close(done)
 
-	p, err := parser.Preprocess(r, config)
-	if err != nil {
-		return nil, err
-	}
-
-	frags := parser.ParseDocumentFragments(parser.NewParseContext(config), strings.NewReader(p), done)
+	frags := parser.ParseDocumentFragments(parser.NewParseContext(config), r, done)
 
 	for frag := range frags {
 		fmt.Println(frag)
 		if frag.Error != nil {
 			return nil, frag.Error
+		}
+		for _, e := range frag.Elements {
+			fmt.Printf("e  %T\n", e)
 		}
 	}
 	return nil, nil
