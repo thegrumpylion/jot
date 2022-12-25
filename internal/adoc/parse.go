@@ -1,6 +1,7 @@
 package adoc
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -35,4 +36,25 @@ func Parse(r io.Reader, config *configuration.Configuration) (*types.Document, e
 	}
 
 	return parser.ParseDocument(strings.NewReader(p), config)
+}
+
+func Fragments(r io.Reader, config *configuration.Configuration) (interface{}, error) {
+
+	done := make(chan interface{})
+	defer close(done)
+
+	p, err := parser.Preprocess(r, config)
+	if err != nil {
+		return nil, err
+	}
+
+	frags := parser.ParseDocumentFragments(parser.NewParseContext(config), strings.NewReader(p), done)
+
+	for frag := range frags {
+		fmt.Println(frag)
+		if frag.Error != nil {
+			return nil, frag.Error
+		}
+	}
+	return nil, nil
 }

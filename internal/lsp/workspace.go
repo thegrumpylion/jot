@@ -1,8 +1,6 @@
 package lsp
 
 import (
-	"io"
-	"io/ioutil"
 	"sort"
 	"strings"
 )
@@ -10,7 +8,6 @@ import (
 // WorkspaceFolder represents a workspace folder.
 type Workspace struct {
 	Name string
-	docs []*Document
 }
 
 // NewWorkspace creates a new workspace.
@@ -20,30 +17,17 @@ func NewWorkspace(name string) *Workspace {
 	}
 }
 
-// Open opens a document in the workspace.
-func (ws *Workspace) Open(p string, r io.Reader) error {
-
-	// read the document
-	content, err := ioutil.ReadAll(r)
-	if err != nil {
-		return err
-	}
-
-	doc := &Document{
-		Path:    p,
-		Content: string(content),
-	}
-
-	// add the document to the workspace
-	ws.docs = append(ws.docs, doc)
-
-	return nil
-}
-
 // Workspaces represents a collection of workspaces.
 type Workspaces struct {
 	items map[string]*Workspace
 	idx   []string
+}
+
+// NewWorkspaces creates a new collection of workspaces.
+func NewWorkspaces() *Workspaces {
+	return &Workspaces{
+		items: make(map[string]*Workspace),
+	}
 }
 
 // Add adds a workspace to the collection.

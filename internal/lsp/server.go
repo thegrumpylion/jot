@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/thegrumpylion/jot/internal/adoc"
 	"go.lsp.dev/jsonrpc2"
 	"go.lsp.dev/protocol"
 )
@@ -13,14 +12,16 @@ import (
 // server is a language server.
 type server struct {
 	ver        string
-	workspaces map[string]*Workspace
+	workspaces *Workspaces
+	douments   map[string]*Document
 }
 
 // NewServer creates a new server.
 func NewServer(ver string) *server {
 	return &server{
 		ver:        ver,
-		workspaces: make(map[string]*Workspace),
+		workspaces: NewWorkspaces(),
+		douments:   make(map[string]*Document),
 	}
 }
 
@@ -34,7 +35,7 @@ func (s *server) Serve(ctx context.Context, to time.Duration) error {
 func (s *server) Initialize(ctx context.Context, params *protocol.InitializeParams) (result *protocol.InitializeResult, err error) {
 	fmt.Println("initialize", params.RootPath)
 
-	s.workspaces[params.RootPath] = NewWorkspace(params.RootPath)
+	s.workspaces.Add(params.RootPath)
 
 	res := &protocol.InitializeResult{
 		Capabilities: protocol.ServerCapabilities{
@@ -99,12 +100,11 @@ func (s *server) Completion(ctx context.Context, params *protocol.CompletionPara
 	fmt.Println("completion", *params)
 	fn := params.TextDocument.URI.Filename()
 
-	fmt.Println("fn", fn)
-	doc, err := adoc.ParseFile(fn)
-	if err != nil {
-		fmt.Println("error parsing file", err)
-	}
-	fmt.Println("doc", doc)
+	doc := s.douments[fn]
+
+	e := doc.GetElement(params.Position.Line, params.Position.Character)
+
+	fmt.Println("element", e)
 
 	return &protocol.CompletionList{
 		IsIncomplete: false,
@@ -151,7 +151,11 @@ func (s *server) DidChange(ctx context.Context, params *protocol.DidChangeTextDo
 	// get document text
 	text := params.ContentChanges[0].Text
 
-	fmt.Println("text", text)
+	// get document
+	doc := s.douments[params.TextDocument.URI.Filename()]
+
+	// update document
+	doc.Update(text)
 
 	return nil
 }
@@ -174,6 +178,14 @@ func (s *server) DidClose(ctx context.Context, params *protocol.DidCloseTextDocu
 
 func (s *server) DidOpen(ctx context.Context, params *protocol.DidOpenTextDocumentParams) (err error) {
 	fmt.Println("didOpen", *params)
+
+	doc, err := NewDocument(params.TextDocument.URI.Filename(), params.TextDocument.Text)
+	if err != nil {
+		return err
+	}
+
+	s.douments[params.TextDocument.URI.Filename()] = doc
+
 	return nil
 }
 
