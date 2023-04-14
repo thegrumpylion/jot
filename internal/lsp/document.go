@@ -53,9 +53,11 @@ func (d *Document) Update(content string) error {
 
 // GetElement returns the element for the given position.
 func (d *Document) GetElement(line, charachter uint32) interface{} {
-	inf, err := adoc.Fragments(strings.NewReader(d.Content), configuration.NewConfiguration())
-	fmt.Println("inferr:", inf, err)
-	fmt.Println("line and charachter", line, charachter)
+	inf, _ := adoc.Fragments(strings.NewReader(d.Content), configuration.NewConfiguration())
+	for _, v := range inf {
+		fmt.Println("DocumentFragment", v.Position)
+		adoc.PrintElements(v.Elements, "")
+	}
 	fmt.Println("offset", d.getOffset(line, charachter))
 	return inf
 }
@@ -104,6 +106,8 @@ func getElement(elements []interface{}, line, charachter uint32) (interface{}, b
 		case *types.ListElement:
 			fmt.Println("UL", v)
 		case *types.StringElement:
+		case *types.List:
+
 		default:
 			fmt.Printf("DEFAULT %T\n", v)
 		}
